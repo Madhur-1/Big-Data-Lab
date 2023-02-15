@@ -1,0 +1,45 @@
+Creating DataProc Cluster:
+gcloud beta dataproc clusters create "clus1" \
+     --region "us-central1" \
+     --metadata 'PIP_PACKAGES=google-cloud-storage spark-nlp==3.0.3' \
+     --worker-machine-type n1-standard-8 \
+     --initialization-actions gs://dataproc-initialization-actions/python/pip-install.sh
+
+Submitting a job to DataProc Cluster:
+gcloud dataproc jobs submit pyspark --cluster clus1\
+    --region "us-central1"\
+    --properties=spark.jars.packages=com.johnsnowlabs.nlp:spark-nlp_2.12:3.0.3\
+    --driver-log-levels root=FATAL \
+    gs://path/to/the_file.py 
+
+Submitting Subscriber code to DataProc Cluster:
+gcloud dataproc jobs submit pyspark --cluster clus1\
+    --region "us-central1"\
+    --properties=spark.jars.packages=com.johnsnowlabs.nlp:spark-nlp_2.12:3.0.3\
+    --driver-log-levels root=FATAL \
+    --jars=gs://str_stream_jar_files/commons-pool2-2.6.2.jar,gs://str_stream_jar_files/kafka-clients-2.6.0.jar,gs://str_stream_jar_files/lz4-java-1.7.1.jar,gs://str_stream_jar_files/scala-library-2.12.10.jar,gs://str_stream_jar_files/slf4j-api-1.7.30.jar,gs://str_stream_jar_files/snappy-java-1.1.7.3.jar,gs://str_stream_jar_files/spark-sql-kafka-0-10_2.12-3.1.1.jar,gs://str_stream_jar_files/spark-tags_2.12-3.1.1.jar,gs://str_stream_jar_files/spark-token-provider-kafka-0-10_2.12-3.1.1.jar,gs://str_stream_jar_files/unused-1.0.0.jar,gs://str_stream_jar_files/zstd-jni-1.4.4-7.jar \
+    gs://yelp-test/kafka-codes/subscriber3.py 
+    
+Setting up Kafka VM:
+1.  $ tar -xzf kafka_2.13-2.8.0.tgz
+    $ cd kafka_2.13-2.8.0
+    
+2. Window1 $ bin/zookeeper-server-start.sh config/zookeeper.properties
+
+3. Window2 $ bin/kafka-server-start.sh config/server.properties
+
+4. Window3 $ bin/kafka-topics.sh --create --topic KafkaYelp --bootstrap-server localhost:9092
+
+
+Jar Files used:
+gs://str_stream_jar_files/commons-pool2-2.6.2.jar
+gs://str_stream_jar_files/kafka-clients-2.6.0.jar
+gs://str_stream_jar_files/lz4-java-1.7.1.jar
+gs://str_stream_jar_files/scala-library-2.12.10.jar
+gs://str_stream_jar_files/slf4j-api-1.7.30.jar
+gs://str_stream_jar_files/snappy-java-1.1.7.3.jar
+gs://str_stream_jar_files/spark-sql-kafka-0-10_2.12-3.1.1.jar
+gs://str_stream_jar_files/spark-tags_2.12-3.1.1.jar
+gs://str_stream_jar_files/spark-token-provider-kafka-0-10_2.12-3.1.1.jar
+gs://str_stream_jar_files/unused-1.0.0.jar
+gs://str_stream_jar_files/zstd-jni-1.4.4-7.jar
